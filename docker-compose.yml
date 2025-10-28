@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  rtl-ais:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rtl-ais:latest
+    container_name: rtl-ais
+    restart: unless-stopped
+
+    # Required for USB device access to RTL-SDR V4 dongle
+    privileged: true
+
+    # Mount USB devices
+    volumes:
+      - /dev/bus/usb:/dev/bus/usb
+
+    # Optional: Override default command with custom parameters
+    # Uncomment and modify as needed
+    command: ["./rtl_ais", "-n", "-h", "192.168.1.34", "-P", "2233"]
+
+    # Optional: Expose network ports if using network output
+    # ports:
+    #   - "10110:10110"
+
+    # Optional: Environment variables
+    # environment:
+    #   - RTL_SDR_DEVICE=0
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
